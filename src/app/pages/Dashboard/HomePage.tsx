@@ -148,7 +148,6 @@ export default function HomePage() {
   const visitantesCount = asCount(visitantesRaw)
   const visitantesRecent = take(visitantesList, 5)
 
-  const loadingAny = adminsLoading || guardiasLoading || visitantesLoading
 
   return (
     <div className="space-y-6">

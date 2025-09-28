@@ -44,13 +44,6 @@ export type ListParams = {
   turno?: GuardiaTurno // (si implementas filtro en backend)
 }
 
-// --- Helpers para tolerar backend con/sin paginación ------------------------
-type DRFPaginated<T> = {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
-}
 
 function normalizeList<T>(data: any): { total: number; results: T[] } {
   if (Array.isArray(data)) return { total: data.length, results: data }

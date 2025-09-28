@@ -27,12 +27,6 @@ export type ListParams = {
   ordering?: string // "apellido" o "-apellido", etc.
 }
 
-type DRFPaginated<T> = {
-  count: number
-  next: string | null
-  previous: string | null
-  results: T[]
-}
 
 // --- Helpers para tolerar backend con/sin paginación ---
 function normalizeList<T>(data: any): { total: number; results: T[] } {
