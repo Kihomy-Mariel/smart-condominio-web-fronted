@@ -17,6 +17,7 @@ const MENU: Item[] = [
   { to: '/guardias',      label: 'Guardias',        icon: <ShieldHalf className="h-4 w-4" /> },
   { to: '/visitantes',    label: 'Visitantes',      icon: <ShieldQuestion className="h-4 w-4" /> },
   { to: '/mascotas',      label: 'Mascotas',        icon: <PawPrint className="h-4 w-4" /> },
+  { to: '/espacios-comunes', label: 'Espacios comunes', icon: <Building2 className="h-4 w-4" /> },
 ];
 
 export default function MainLayout() {
