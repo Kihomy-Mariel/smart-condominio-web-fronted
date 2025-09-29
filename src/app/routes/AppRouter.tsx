@@ -19,6 +19,7 @@ import CasasListPage from '../pages/casas/CasasListPage'
 import VehiculosListPage from '../pages/vehiculos/VehiculosListPage'
 import MascotasListPage from '../pages/mascotas/MascotasListPage'
 import EspaciosComunesListPage from '../pages/espacioscomunes/EspaciosComunesListPage'
+import SolicitudesListPage from '../pages/solicitudes/SolicitudesListPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
 export function AppRouter() {
@@ -48,6 +49,7 @@ export function AppRouter() {
           <Route path="visitantes" element={<VisitanteListPage />} />
           <Route path="mascotas" element={<MascotasListPage />} />
           <Route path="espacios-comunes" element={<EspaciosComunesListPage />} />
+          <Route path="solicitudes" element={<SolicitudesListPage />} />
         </Route>
       </Route>
 
