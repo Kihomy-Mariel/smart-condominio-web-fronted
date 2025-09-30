@@ -5,13 +5,23 @@ import { listAvisos, deleteAviso, type Aviso } from '@/services/avisos.service'
 import { api } from '@/services/api'
 import { AvisoFormDialog } from './AvisoFormDialog' // ← export con nombre, mismo folder
 
-// ---- Admins (Lite). Si ya tienes un service real, reemplaza por tu import ----
+// ---- Admins (Lite). Adaptado a tu endpoint /admins/ ----
 type AdminLite = { id: number; usuario?: string; nombre?: string; apellido?: string; email?: string }
 async function listAdministradoresLite(): Promise<{ total: number; results: AdminLite[] }> {
-  const { data } = await api.get('/administradores/', { params: { page: 1, page_size: 1000 } })
+  const { data } = await api.get('/admins/', { params: { page: 1, page_size: 1000 } }) // 👈 corregido
   const results = Array.isArray(data) ? data : (data?.results ?? [])
-  return { total: results.length, results: results as AdminLite[] }
+  return {
+    total: results.length,
+    results: results.map((a: any) => ({
+      id: a.id,
+      nombre: a.nombres ?? '',
+      apellido: a.apellido ?? '',
+      usuario: a.usuario ?? '',
+      email: a.correo ?? '',
+    })),
+  }
 }
+
 function adminLabel(a?: AdminLite, fallback?: string) {
   if (!a) return fallback ?? ''
   const nombre = [a.nombre, a.apellido].filter(Boolean).join(' ').trim()
@@ -280,3 +290,4 @@ function Th({ label, ordering, field, onToggle }: {
     </th>
   )
 }
+

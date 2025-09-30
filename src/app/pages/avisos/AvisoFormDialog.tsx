@@ -3,24 +3,49 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, keepPreviousData } from '@tanstack/react-query'
-import { createAviso, updateAviso, type Aviso, type CreateAvisoInput, type UpdateAvisoInput } from '@/services/avisos.service'
+import {
+  createAviso,
+  updateAviso,
+  type Aviso,
+  type CreateAvisoInput,
+  type UpdateAvisoInput,
+} from '@/services/avisos.service'
 import { CalendarDays, User2 } from 'lucide-react'
 
-// ---- Admins (Lite). Reemplaza por tu service real si ya existe ----
-type AdminLite = { id: number; usuario?: string; nombre?: string; apellido?: string; email?: string }
+// ---- Admins (Lite) ----
+type AdminLite = {
+  id: number
+  usuario?: string
+  nombre?: string
+  apellido?: string
+  email?: string
+}
+
 async function listAdministradoresLite() {
   const { api } = await import('@/services/api')
-  const { data } = await api.get('/administradores/', { params: { page: 1, page_size: 1000 } })
-  const results = Array.isArray(data) ? data : (data?.results ?? [])
-  return { total: results.length, results: results as AdminLite[] }
+  const { data } = await api.get('/admins/', {   // 👈 aquí va /admins/
+    params: { page: 1, page_size: 1000 },
+  })
+  const results = Array.isArray(data) ? data : (data.results ?? [])
+  return {
+    total: results.length,
+    results: results.map((a: any) => ({
+      id: a.id,
+      nombre: a.nombres ?? '',
+      apellido: a.apellido ?? '',
+      usuario: a.usuario ?? '',
+      email: a.correo ?? '',
+    })),
+  }
 }
+
 function adminLabel(a?: AdminLite) {
   if (!a) return ''
   const nombre = [a.nombre, a.apellido].filter(Boolean).join(' ').trim()
   return nombre || a.usuario || a.email || `Admin ${a.id}`
 }
-// -------------------------------------------------------------------
 
+// ---- Validación ----
 const schema = z.object({
   titulo: z.string().min(3, 'Mínimo 3 caracteres'),
   detalle: z.string().min(3, 'Mínimo 3 caracteres'),
@@ -60,23 +85,24 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
       ? {
           titulo: record.titulo,
           detalle: record.detalle,
-          fecha: record.fecha,                // ya viene 'YYYY-MM-DD'
+          fecha: record.fecha,
           administrador: record.administrador,
         }
       : {
           titulo: '',
           detalle: '',
-          fecha: new Date().toISOString().slice(0, 10), // hoy
+          fecha: new Date().toISOString().slice(0, 10),
           administrador: 0,
         },
   })
 
   const selectedAdminId = watch('administrador')
   const [adminSearch, setAdminSearch] = useState('')
-  const filteredAdmins = admins.filter(a =>
-    adminLabel(a).toLowerCase().includes(adminSearch.toLowerCase()) ||
-    (a.usuario ?? '').toLowerCase().includes(adminSearch.toLowerCase()) ||
-    (a.email ?? '').toLowerCase().includes(adminSearch.toLowerCase())
+  const filteredAdmins = admins.filter(
+    (a) =>
+      adminLabel(a).toLowerCase().includes(adminSearch.toLowerCase()) ||
+      (a.usuario ?? '').toLowerCase().includes(adminSearch.toLowerCase()) ||
+      (a.email ?? '').toLowerCase().includes(adminSearch.toLowerCase())
   )
 
   useEffect(() => {
@@ -97,10 +123,10 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
     }
   }, [record, reset])
 
-  useEffect(() => { setFocus('titulo') }, [setFocus])
+  useEffect(() => {
+    setFocus('titulo')
+  }, [setFocus])
 
-  // Si tu backend asigna admin automáticamente según el token, podrías ocultar el selector
-  // y mandar administrador := id del admin logueado, obtenido de /auth/me.
   const createMut = useMutation({
     mutationFn: (input: CreateAvisoInput) =>
       createAviso({
@@ -125,7 +151,7 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
     const payload = {
       titulo: v.titulo.trim(),
       detalle: v.detalle.trim(),
-      fecha: v.fecha,                   // 'YYYY-MM-DD'
+      fecha: v.fecha,
       administrador: v.administrador,
     }
     if (mode === 'create') await createMut.mutateAsync(payload)
@@ -134,17 +160,19 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
 
   const pending = isSubmitting || createMut.isPending || updateMut.isPending
 
-  // UX cerrar con ESC / backdrop
   const cardRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [onClose])
 
   const onBackdropMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
-    const clickedOutside = e.target instanceof Node && !cardRef.current.contains(e.target)
+    const clickedOutside =
+      e.target instanceof Node && !cardRef.current.contains(e.target)
     if (clickedOutside) onClose()
   }
 
@@ -166,21 +194,45 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
           <h2 id="aviso-dialog-title" className="text-base font-semibold">
             {mode === 'create' ? 'Nuevo aviso' : `Editar: ${record?.titulo}`}
           </h2>
-          <button onClick={onClose} className="rounded-lg px-2 py-1 hover:bg-slate-100" aria-label="Cerrar">✕</button>
+          <button
+            onClick={onClose}
+            className="rounded-lg px-2 py-1 hover:bg-slate-100"
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
         </div>
 
         <div className="max-h-[80vh] overflow-y-auto px-4 py-3">
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-3" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="grid grid-cols-1 md:grid-cols-2 gap-3"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div className="md:col-span-2">
               <label className="text-sm">Título</label>
-              <input className="mt-1 w-full rounded-xl border px-3 py-2" {...register('titulo')} />
-              {errors.titulo && <p className="text-xs text-red-600 mt-1">{errors.titulo.message}</p>}
+              <input
+                className="mt-1 w-full rounded-xl border px-3 py-2"
+                {...register('titulo')}
+              />
+              {errors.titulo && (
+                <p className="text-xs text-red-600 mt-1">
+                  {errors.titulo.message}
+                </p>
+              )}
             </div>
 
             <div className="md:col-span-2">
               <label className="text-sm">Detalle</label>
-              <textarea rows={5} className="mt-1 w-full rounded-xl border px-3 py-2" {...register('detalle')} />
-              {errors.detalle && <p className="text-xs text-red-600 mt-1">{errors.detalle.message}</p>}
+              <textarea
+                rows={5}
+                className="mt-1 w-full rounded-xl border px-3 py-2"
+                {...register('detalle')}
+              />
+              {errors.detalle && (
+                <p className="text-xs text-red-600 mt-1">
+                  {errors.detalle.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -193,10 +245,14 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
                 />
                 <CalendarDays className="pointer-events-none absolute right-3 top-3 h-4 w-4 opacity-60" />
               </div>
-              {errors.fecha && <p className="text-xs text-red-600 mt-1">{errors.fecha.message}</p>}
+              {errors.fecha && (
+                <p className="text-xs text-red-600 mt-1">
+                  {errors.fecha.message}
+                </p>
+              )}
             </div>
 
-            {/* Administrador (selector con buscador) */}
+            {/* Administrador */}
             <div className="relative z-10">
               <label className="text-sm">Administrador</label>
               <input
@@ -208,13 +264,18 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
               />
               <div className="mt-2 max-h-40 overflow-y-auto border rounded-lg bg-white shadow">
                 {filteredAdmins.length === 0 ? (
-                  <div className="px-3 py-2 text-sm text-slate-500">No hay resultados</div>
+                  <div className="px-3 py-2 text-sm text-slate-500">
+                    No hay resultados
+                  </div>
                 ) : (
                   filteredAdmins.map((a) => (
                     <div
                       key={a.id}
                       onClick={() => {
-                        setValue('administrador', a.id, { shouldValidate: true, shouldDirty: true })
+                        setValue('administrador', a.id, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        })
                         setAdminSearch(adminLabel(a))
                       }}
                       className={`px-3 py-2 text-sm cursor-pointer hover:bg-slate-100 ${
@@ -228,12 +289,20 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
                   ))
                 )}
               </div>
-              {errors.administrador && <p className="text-xs text-red-600 mt-1">{errors.administrador.message}</p>}
+              {errors.administrador && (
+                <p className="text-xs text-red-600 mt-1">
+                  {errors.administrador.message}
+                </p>
+              )}
             </div>
 
             {/* Footer */}
             <div className="md:col-span-2 mt-2 flex items-center justify-end gap-2">
-              <button type="button" onClick={onClose} className="rounded-xl border px-4 py-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-xl border px-4 py-2"
+              >
                 Cancelar
               </button>
               <button
@@ -250,3 +319,4 @@ export function AvisoFormDialog({ mode, record, onClose, onSaved }: Props) {
     </div>
   )
 }
+
