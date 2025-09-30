@@ -20,6 +20,8 @@ import VehiculosListPage from '../pages/vehiculos/VehiculosListPage'
 import MascotasListPage from '../pages/mascotas/MascotasListPage'
 import EspaciosComunesListPage from '../pages/espacioscomunes/EspaciosComunesListPage'
 import SolicitudesListPage from '../pages/solicitudes/SolicitudesListPage'
+import ResidentesListPage from '../pages/residentes/ResidentesListPage'
+import AvisosListPage from '../pages/avisos/AvisosListPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
 export function AppRouter() {
@@ -45,10 +47,13 @@ export function AppRouter() {
           <Route path="vehiculos" element={<VehiculosListPage />} />
           {/* Otros */}
           <Route path="copropietarios" element={<CopropietariosListPage />} />
+          <Route path="residentes" element={<ResidentesListPage />} />
+
           <Route path="guardias" element={<GuardiaListPage />} />
           <Route path="visitantes" element={<VisitanteListPage />} />
           <Route path="mascotas" element={<MascotasListPage />} />
           <Route path="espacios-comunes" element={<EspaciosComunesListPage />} />
+          <Route path="avisos" element={<AvisosListPage />} />
           <Route path="solicitudes" element={<SolicitudesListPage />} />
         </Route>
       </Route>

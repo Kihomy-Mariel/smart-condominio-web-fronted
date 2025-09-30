@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import {
-  Building2, Home, Users, Bell, Settings, Menu, LogOut, ShieldHalf, ShieldQuestion, CarFront, PawPrint, Calendar
+  Building2, Home, Users, Bell, Settings, Menu, LogOut, ShieldHalf, ShieldQuestion, CarFront, PawPrint, Calendar,User2,Megaphone, 
 } from 'lucide-react';
 
 type Item = { to: string; label: string; icon: React.ReactNode };
@@ -12,13 +12,16 @@ const MENU: Item[] = [
   { to: '/',              label: 'Resumen General', icon: <Home className="h-4 w-4" /> },
   { to: '/admins',        label: 'Administradores', icon: <Users className="h-4 w-4" /> },
   { to: '/copropietarios',label: 'Copropietarios',  icon: <Users className="h-4 w-4" /> },
+  { to: '/residentes',       label: 'Residentes',        icon: <User2 className="h-4 w-4" /> },
   { to: '/casas',         label: 'Casas',           icon: <Building2 className="h-4 w-4" /> },
   { to: '/vehiculos',     label: 'Vehículos',       icon: <CarFront className="h-4 w-4" /> },
   { to: '/guardias',      label: 'Guardias',        icon: <ShieldHalf className="h-4 w-4" /> },
   { to: '/visitantes',    label: 'Visitantes',      icon: <ShieldQuestion className="h-4 w-4" /> },
   { to: '/mascotas',      label: 'Mascotas',        icon: <PawPrint className="h-4 w-4" /> },
   { to: '/espacios-comunes', label: 'Espacios comunes', icon: <Building2 className="h-4 w-4" /> },
+  { to: '/avisos',           label: 'Avisos',           icon: <Megaphone className="h-4 w-4" /> },
   { to: '/solicitudes',      label: 'Solicitudes',      icon: <Calendar className="h-4 w-4" /> },
+  
 ];
 
 export default function MainLayout() {
