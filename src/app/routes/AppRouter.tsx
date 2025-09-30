@@ -22,6 +22,8 @@ import EspaciosComunesListPage from '../pages/espacioscomunes/EspaciosComunesLis
 import SolicitudesListPage from '../pages/solicitudes/SolicitudesListPage'
 import ResidentesListPage from '../pages/residentes/ResidentesListPage'
 import AvisosListPage from '../pages/avisos/AvisosListPage'
+// ✅ SOLO ESTOS para Espacios Comunes
+import ReportesUsoAreasPage from '../pages/reportes/ReportesUsoAreasPage'
 import NotFoundPage from '../pages/NotFoundPage'
 
 export function AppRouter() {
@@ -55,6 +57,7 @@ export function AppRouter() {
           <Route path="espacios-comunes" element={<EspaciosComunesListPage />} />
           <Route path="avisos" element={<AvisosListPage />} />
           <Route path="solicitudes" element={<SolicitudesListPage />} />
+          <Route path="reportes/uso-areas" element={<ReportesUsoAreasPage />} />
         </Route>
       </Route>
 

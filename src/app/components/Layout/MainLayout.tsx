@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import {
-  Building2, Home, Users, Bell, Settings, Menu, LogOut, ShieldHalf, ShieldQuestion, CarFront, PawPrint, Calendar,User2,Megaphone, 
+  Building2, Home, Users, Bell, Settings, Menu, LogOut, ShieldHalf, ShieldQuestion, CarFront, PawPrint, Calendar,User2,Megaphone, BarChart3
 } from 'lucide-react';
 
 type Item = { to: string; label: string; icon: React.ReactNode };
@@ -21,6 +21,7 @@ const MENU: Item[] = [
   { to: '/espacios-comunes', label: 'Espacios comunes', icon: <Building2 className="h-4 w-4" /> },
   { to: '/avisos',           label: 'Avisos',           icon: <Megaphone className="h-4 w-4" /> },
   { to: '/solicitudes',      label: 'Solicitudes',      icon: <Calendar className="h-4 w-4" /> },
+  { to: '/reportes/uso-areas', label: 'Reportes de uso', icon: <BarChart3 className="h-4 w-4" /> },
   
 ];
 
